@@ -11,6 +11,16 @@ def connectDB(dbName):
 
 def makeTable():
     "Make users Table"
+    cursor.execute("""
+        create table if not exists users (
+            id CHAR(16) primary key,
+            pwd CHAR(16),
+            name CHAR(10),
+            phone CHAR(15),
+            addr CHAR(20),
+            age NUMBER(3));
+        """);
+    print('Table Created..')
 
 
 def insertUser(user):
@@ -29,7 +39,6 @@ def selectUser():
     for u in users:
         user = []
         for i in u:
-            user = []
             if i.isdecimal():
                 i = int(i)
             user.append(i)
@@ -39,10 +48,16 @@ def selectUser():
 
 def selectOneUser(id):
     "Select a user"
-    user = None
-    selectOneSQL = """SELECT * FROM users WHERE id%d""" % (id)
-
-
+    user = []
+    selectOneSQL = """SELECT * FROM users WHERE id = %s""" % (id)
+    cursor.execute(selectOneSQL)
+    userData = cursor.fetchone()
+    user.append(userData[0])
+    user.append(userData[1])
+    user.append(userData[2])
+    user.append(userData[3])
+    user.append(userData[4])
+    user.append(userData[5])
     return user
 
 def deleteUser(id):
